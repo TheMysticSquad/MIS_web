@@ -1,5 +1,6 @@
 // src/pages/NSCDashboard.jsx
 import React, { useState, useContext } from "react";
+import Header from "../components/Header"; // ✅ Import common header
 import Filters from "../components/Filters";
 import NSCSummaryCards from "../components/NSCSummaryCards";
 import NSCCharts from "../components/NSCCharts";
@@ -43,7 +44,11 @@ export default function NSCDashboard() {
 
   return (
     <div className="nsc-dashboard">
-      <h2 className="dashboard-title">New Service Connection Dashboard</h2>
+      {/* ✅ Common Header */}
+      <Header
+        title="New Service Connection Dashboard"
+        subtitle="Track and monitor new electricity connection requests and approvals"
+      />
 
       {/* ✅ Filters with Apply button */}
       <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
