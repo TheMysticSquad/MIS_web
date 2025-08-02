@@ -1,6 +1,7 @@
+// src/context/UserContext.jsx
 import React, { createContext, useState, useContext } from "react";
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -12,4 +13,5 @@ export const UserProvider = ({ children }) => {
   );
 };
 
+// Optional hook for convenience
 export const useUser = () => useContext(UserContext);
