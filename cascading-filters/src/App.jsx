@@ -1,20 +1,29 @@
+// src/App.jsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
-import Filters from "./pages/Filters";
-import Dashboard from "./pages/Dashboard";
+import NSCDashboard from "./pages/NSCDashboard";
+import { UserProvider } from "./context/UserContext";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/landing" element={<Landing />} />
-        <Route path="/filters" element={<Filters />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          {/* Default route → Login */}
+          <Route path="/" element={<Login />} />
+
+          {/* Landing page after login */}
+          <Route path="/landing" element={<Landing />} />
+
+          {/* NSC Dashboard */}
+          <Route path="/nsc-dashboard" element={<NSCDashboard />} />
+
+          {/* You can add more dashboards here */}
+          {/* <Route path="/billing-dashboard" element={<BillingDashboard />} /> */}
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
