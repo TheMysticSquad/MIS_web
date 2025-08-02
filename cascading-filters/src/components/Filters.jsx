@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../css/Filters.css";
 
-export default function Filter({ employeeId, onChange }) {
+export default function Filters({ employeeId, onApply }) {
   const [filters, setFilters] = useState(null);
   const [selected, setSelected] = useState({
     circle: "",
     division: "",
     subdivision: "",
-    section: ""
+    section: "",
+    year: "",
+    month: ""
   });
 
+  // Fetch filters
   useEffect(() => {
     async function fetchFilters() {
       try {
@@ -17,13 +20,13 @@ export default function Filter({ employeeId, onChange }) {
         const data = await res.json();
         setFilters(data);
 
-        // Auto-select defaults if single option
-        setSelected({
+        setSelected((prev) => ({
+          ...prev,
           circle: data.circle?.CircleID || "",
           division: data.divisions?.length === 1 ? data.divisions[0].DivisionID : "",
           subdivision: data.sub_divisions?.length === 1 ? data.sub_divisions[0].SubdivisionID : "",
           section: data.sections?.length === 1 ? data.sections[0].SectionID : ""
-        });
+        }));
 
       } catch (err) {
         console.error("Error fetching filters", err);
@@ -32,9 +35,16 @@ export default function Filter({ employeeId, onChange }) {
     fetchFilters();
   }, [employeeId]);
 
+  // Apply only when all required values are present
   useEffect(() => {
-    onChange(selected);
-  }, [selected, onChange]);
+    if (selected.section && selected.year && selected.month) {
+      onApply({
+        section_id: selected.section,
+        year: selected.year,
+        month: selected.month
+      });
+    }
+  }, [selected, onApply]);
 
   if (!filters) return <p>Loading filters...</p>;
 
@@ -104,6 +114,34 @@ export default function Filter({ employeeId, onChange }) {
           </select>
         </div>
       )}
+
+      {/* Year */}
+      <div>
+        <label>Year</label>
+        <select
+          value={selected.year}
+          onChange={(e) => setSelected({ ...selected, year: e.target.value })}
+        >
+          <option value="">Select Year</option>
+          {[2023, 2024, 2025].map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Month */}
+      <div>
+        <label>Month</label>
+        <select
+          value={selected.month}
+          onChange={(e) => setSelected({ ...selected, month: e.target.value })}
+        >
+          <option value="">Select Month</option>
+          {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
