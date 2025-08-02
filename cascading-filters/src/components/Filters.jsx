@@ -12,7 +12,7 @@ export default function Filters({ employeeId, onApply }) {
     month: ""
   });
 
-  // Fetch filters
+  // Fetch filters once
   useEffect(() => {
     async function fetchFilters() {
       try {
@@ -35,18 +35,19 @@ export default function Filters({ employeeId, onApply }) {
     fetchFilters();
   }, [employeeId]);
 
-  // Apply only when all required values are present
-  useEffect(() => {
+  if (!filters) return <p>Loading filters...</p>;
+
+  const handleApply = () => {
     if (selected.section && selected.year && selected.month) {
       onApply({
         section_id: selected.section,
         year: selected.year,
         month: selected.month
       });
+    } else {
+      alert("Please select Section, Year, and Month before applying.");
     }
-  }, [selected, onApply]);
-
-  if (!filters) return <p>Loading filters...</p>;
+  };
 
   return (
     <div className="filter-container">
@@ -141,6 +142,11 @@ export default function Filters({ employeeId, onApply }) {
             <option key={m} value={m}>{m}</option>
           ))}
         </select>
+      </div>
+
+      {/* ✅ Apply Button */}
+      <div>
+        <button onClick={handleApply} className="apply-btn">Apply</button>
       </div>
     </div>
   );
