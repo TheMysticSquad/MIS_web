@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Filter.css";
+import "../css/Filters.css";
 
 export default function Filter({ employeeId, onChange }) {
   const [filters, setFilters] = useState(null);
