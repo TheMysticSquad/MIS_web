@@ -1,8 +1,10 @@
 // src/context/UserContext.jsx
 import React, { createContext, useState, useContext } from "react";
 
+// ✅ Create and export context
 export const UserContext = createContext();
 
+// ✅ Provider
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
@@ -13,5 +15,5 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-// Optional hook for convenience
+// ✅ Custom hook (optional, for easy use)
 export const useUser = () => useContext(UserContext);
