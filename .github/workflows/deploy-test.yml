@@ -9,9 +9,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      # 1️⃣ Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Create Deployment in GitHub (Jira will track this)
+      - name: Create Deployment
+        uses: chrnorm/deployment-action@v1
+        with:
+          token: ${{ secrets.GITHUBPAT }}
+          environment: Test
+          ref: ${{ github.sha }}
+          description: "Deploying commit to Render Test environment"
+
+      # 3️⃣ Trigger Render Deployment
       - name: Trigger Render Deploy
         run: |
-          curl -X POST "https://api.render.com/deploy/srv-d1si9ovdiees739pt6sg?key=_xP6iuGY5SY"
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+      # 4️⃣ Update Deployment Status (Mark success in GitHub/Jira)
+      - name: Update Deployment Status
+        uses: chrnorm/deployment-status@v1
+        with:
+          token: ${{ secrets.GITHUBPAT }}
+          state: success
+          environment: Test
+          description: "Deployment to Render Test completed successfully"
