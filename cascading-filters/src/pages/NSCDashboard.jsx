@@ -1,6 +1,6 @@
 // src/pages/NSCDashboard.jsx
 import React, { useState, useContext } from "react";
-import Header from "../components/Header"; // ✅ Import common header
+import Header from "../components/Header"; 
 import Filters from "../components/Filters";
 import NSCSummaryCards from "../components/NSCSummaryCards";
 import NSCCharts from "../components/NSCCharts";
@@ -11,10 +11,10 @@ export default function NSCDashboard() {
   const { user } = useContext(UserContext);
 
   const [kpiData, setKpiData] = useState(null);
+  const [filtersSelected, setFiltersSelected] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Called only when Apply button is clicked
   const handleApplyFilters = (selectedFilters) => {
     if (!selectedFilters.section_id || !selectedFilters.year || !selectedFilters.month) {
       setError("Please select all filters");
@@ -24,6 +24,7 @@ export default function NSCDashboard() {
     setLoading(true);
     setError("");
     setKpiData(null);
+    setFiltersSelected(selectedFilters);
 
     fetch(
       `https://mis-test-api.onrender.com/test/kpi/?section_id=${selectedFilters.section_id}&year=${selectedFilters.year}&month=${selectedFilters.month}`
@@ -33,7 +34,11 @@ export default function NSCDashboard() {
         return res.json();
       })
       .then((data) => {
-        setKpiData(data);
+        setKpiData({
+          ...data,
+          section_id: selectedFilters.section_id,
+          year: selectedFilters.year
+        });
         setLoading(false);
       })
       .catch((err) => {
@@ -44,18 +49,22 @@ export default function NSCDashboard() {
 
   return (
     <div className="nsc-dashboard">
-      {/* ✅ Common Header */}
+      {/* Header stays at top */}
       <Header
         title="New Service Connection Dashboard"
         subtitle="Track and monitor new electricity connection requests and approvals"
       />
 
-      {/* ✅ Filters with Apply button */}
-      <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
+      {/* Filters always below header */}
+      <div className="filters-section">
+        <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
+      </div>
 
+      {/* Loading & Error */}
       {loading && <p className="loading-text">Loading data...</p>}
       {error && <p className="error-text">{error}</p>}
 
+      {/* Data Section */}
       {kpiData && !loading && !error ? (
         <>
           <NSCSummaryCards kpi={kpiData} />

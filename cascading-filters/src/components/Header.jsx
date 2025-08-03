@@ -12,15 +12,17 @@ export default function Header({ title, subtitle }) {
   return (
     <header className="dashboard-header">
       <div className="header-left">
-        <img src={BSPHCLLogo} alt="BSPHCL Logo" />
-        <div>
-          <h1>{title}</h1>
-          {subtitle && <p>{subtitle}</p>}
+        <img src={BSPHCLLogo} alt="BSPHCL Logo" className="bsp-logo" />
+        <div className="header-text">
+          <h1 className="header-title">{title}</h1>
+          {subtitle && <p className="header-subtitle">{subtitle}</p>}
         </div>
       </div>
 
       <div className="header-right">
-        <span>Welcome, {user?.name || "User"}</span>
+        <span className="welcome-text">
+          Welcome, <strong>{user?.name || "User"}</strong>
+        </span>
         <button className="back-btn" onClick={() => navigate("/landing")}>
           ← Back
         </button>
