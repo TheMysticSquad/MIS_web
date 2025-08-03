@@ -1,0 +1,17 @@
+name: Deploy to Render (Test)
+
+on:
+  push:
+    branches:
+      - Test  # Only run on Test branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST "https://api.render.com/deploy/srv-d1si9ovdiees739pt6sg?key=_xP6iuGY5SY"
