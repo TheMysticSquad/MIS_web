@@ -4,6 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import NSCDashboard from "./pages/NSCDashboard";
+import DNDDashboard from "./pages/DNDDashboard";
+import BillingDashboard from "./pages/BillingDashboard"; 
+import CollectionDashboard from "./pages/CollectionDashboard"; 
+import MeteringDashboard from "./pages/MeteringDashboard";
+import TheftDashboard from "./pages/TheftDashboard";
 import { UserProvider } from "./context/UserContext";
 
 export default function App() {
@@ -19,6 +24,16 @@ export default function App() {
 
           {/* NSC Dashboard */}
           <Route path="/nsc-dashboard" element={<NSCDashboard />} />
+          {/* DND Dashboard */}
+          <Route path="/dnd-dashboard" element={<DNDDashboard />} />
+          {/* Collection Dashboard */}
+          <Route path="/collection-dashboard" element={<CollectionDashboard />} />
+          {/* Metering Dashboard */}
+          <Route path="/metering-dashboard" element={<MeteringDashboard />} />
+          {/* Theft Dashboard */}
+          <Route path="/theft-dashboard" element={<TheftDashboard />} />  
+          {/* Billing Dashboard */}
+          <Route path="/billing-dashboard" element={<BillingDashboard />} />
 
           {/* You can add more dashboards here */}
           {/* <Route path="/billing-dashboard" element={<BillingDashboard />} /> */}
