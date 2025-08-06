@@ -23,8 +23,8 @@ export default function Filters() {
   if (!filters) return <p>Loading filters...</p>;
 
   const divisions = filters.divisions || (filters.division ? [filters.division] : []);
-  const subdivisions = filters.sub_divisions?.filter(sd => !selectedDivision || sd.DivisionID == selectedDivision) || [];
-  const sections = filters.sections?.filter(sec => !selectedSubdivision || sec.SubdivisionID == selectedSubdivision) || [];
+  const subdivisions = filters.sub_divisions || []; // ✅ Show all subdivisions regardless of division
+  const sections = filters.sections || []; // ✅ Show all sections regardless of subdivision
 
   const handleSubmit = () => {
     navigate(`/dashboard?dashboard=${dashboard}&section=${selectedSection}&year=${year}&month=${month}`);
@@ -43,37 +43,43 @@ export default function Filters() {
       )}
 
       {/* Division */}
-      {divisions.length > 0 && (
-        <div>
-          <label>Division: </label>
-          <select value={selectedDivision} onChange={e => setSelectedDivision(e.target.value)}>
-            <option value="">Select Division</option>
-            {divisions.map(d => <option key={d.DivisionID} value={d.DivisionID}>{d.DivisionName}</option>)}
-          </select>
-        </div>
-      )}
+      <div>
+        <label>Division: </label>
+        <select value={selectedDivision} onChange={e => setSelectedDivision(e.target.value)}>
+          <option value="">Select Division</option>
+          {divisions.map(d => (
+            <option key={d.DivisionID} value={d.DivisionID}>
+              {d.DivisionName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Subdivision */}
-      {subdivisions.length > 0 && (
-        <div>
-          <label>Subdivision: </label>
-          <select value={selectedSubdivision} onChange={e => setSelectedSubdivision(e.target.value)}>
-            <option value="">Select Subdivision</option>
-            {subdivisions.map(sd => <option key={sd.SubdivisionID} value={sd.SubdivisionID}>{sd.SubdivisionName}</option>)}
-          </select>
-        </div>
-      )}
+      <div>
+        <label>Subdivision: </label>
+        <select value={selectedSubdivision} onChange={e => setSelectedSubdivision(e.target.value)}>
+          <option value="">Select Subdivision</option>
+          {subdivisions.map(sd => (
+            <option key={sd.SubdivisionID} value={sd.SubdivisionID}>
+              {sd.SubdivisionName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Section */}
-      {sections.length > 0 && (
-        <div>
-          <label>Section: </label>
-          <select value={selectedSection} onChange={e => setSelectedSection(e.target.value)}>
-            <option value="">Select Section</option>
-            {sections.map(sec => <option key={sec.SectionID} value={sec.SectionID}>{sec.SectionName}</option>)}
-          </select>
-        </div>
-      )}
+      <div>
+        <label>Section: </label>
+        <select value={selectedSection} onChange={e => setSelectedSection(e.target.value)}>
+          <option value="">Select Section</option>
+          {sections.map(sec => (
+            <option key={sec.SectionID} value={sec.SectionID}>
+              {sec.SectionName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Year */}
       <div>
