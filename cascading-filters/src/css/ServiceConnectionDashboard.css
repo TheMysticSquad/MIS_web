@@ -1,0 +1,113 @@
+.nsc-dashboard {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  min-height: 100vh;         /* Ensure full-page height */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* General Page Scroll */
+html, body {
+  height: 100%;
+  overflow-y: auto !important;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: auto !important;
+}
+
+/* Title */
+.dashboard-title {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  margin: 0 0 20px;
+  color: #333;
+}
+
+/* Status Messages */
+.loading-text {
+  color: #666;
+  text-align: center;
+}
+
+.placeholder-text {
+  color: #aaa;
+  text-align: center;
+}
+
+/* Summary Cards Layout - 3 cards per row on large screens */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Exactly 3 per row */
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr); /* 2 per row for medium screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .summary-cards {
+    grid-template-columns: 1fr; /* Single column for mobile */
+  }
+}
+
+/* Card Styles */
+.card {
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card.approved {
+  background: #e6f7e6;
+  border: 1px solid #c8e6c9;
+}
+
+.card.pending {
+  background: #fff3e6;
+  border: 1px solid #ffcc80;
+}
+
+/* Charts Section */
+.charts-section {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.chart-container {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Sticky Header + Filters (Optional) */
+.header-fixed {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+}
+
+.filters-fixed {
+  position: sticky;
+  top: 60px;
+  z-index: 999;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
