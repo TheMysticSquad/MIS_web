@@ -1,49 +1,70 @@
-import React from 'react';
-import Header from '../components/Header';
+import React, { useState, useContext } from "react";
+import Header from "../components/Header";
+import Filters from "../components/Filters";
+import DisconnectionRecoverySummaryCards from "../components/DisconnectionRecoverySummaryCards";
+import DisconnectionRecoveryCharts from "../components/DisconnectionRecoveryCharts";
+import { UserContext } from "../context/UserContext";
+import "../css/DisconnectionRecoveryDashboard.css";
 
-const DNDDashboard = () => {
-    return (
+export default function DisconnectionRecoveryDashboard() {
+  const { user } = useContext(UserContext);
+  const [kpiData, setKpiData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleApplyFilters = (selectedFilters) => {
+    if (!selectedFilters.section_id || !selectedFilters.year || !selectedFilters.month) {
+      setError("Please select all filters");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setKpiData(null);
+
+    fetch(
+      `https://mis-test-api.onrender.com/test/kpi?model=disconnection_recovery&section_id=${selectedFilters.section_id}&year=${selectedFilters.year}&month=${selectedFilters.month}`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch KPI data");
+        return res.json();
+      })
+      .then((data) => {
+        setKpiData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || "Something went wrong");
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="disconnection-dashboard">
+      <Header
+        title="Disconnection & Recovery Dashboard"
+        subtitle="Monitor disconnections, reconnections, and recovery performance"
+      />
+
+      <div className="filters-section">
+        <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
+      </div>
+
+      {loading && <p className="loading-text">Loading data...</p>}
+      {error && <p className="error-text">{error}</p>}
+
+      {kpiData && !loading && !error ? (
         <>
-            <Header />
-            <div style={{ padding: '2rem' }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Do Not Disturb (DND) Dashboard</h2>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '2rem'
-                }}>
-                    <div style={{
-                        background: '#f5f5f5',
-                        padding: '1.5rem',
-                        borderRadius: '8px',
-                        minWidth: '300px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-                    }}>
-                        <h3>Active DND Users</h3>
-                        <ul>
-                            <li>John Doe</li>
-                            <li>Jane Smith</li>
-                            <li>Michael Johnson</li>
-                        </ul>
-                    </div>
-                    <div style={{
-                        background: '#f5f5f5',
-                        padding: '1.5rem',
-                        borderRadius: '8px',
-                        minWidth: '300px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-                    }}>
-                        <h3>DND Requests</h3>
-                        <ul>
-                            <li>Request #1234 - Pending</li>
-                            <li>Request #1235 - Approved</li>
-                            <li>Request #1236 - Rejected</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+          <DisconnectionRecoverySummaryCards kpi={kpiData} />
+          <DisconnectionRecoveryCharts kpi={kpiData} />
         </>
-    );
-};
-
-export default DNDDashboard;
+      ) : (
+        !loading && !error && (
+          <p className="placeholder-text">
+            Please select filters and click Apply to view data
+          </p>
+        )
+      )}
+    </div>
+  );
+}
