@@ -29,7 +29,7 @@
 .header-left h1 {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: #000;
 }
 
 .header-right {
@@ -40,7 +40,7 @@
 
 .header-right span {
   font-size: 14px;
-  color: #555;
+  color: #000;
 }
 
 /* Dashboard Container */
@@ -59,40 +59,52 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border 0.2s ease;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-between;
+  text-align: center;
+  border: 2px solid transparent;
 }
 
 .dashboard-card:hover {
   transform: translateY(-5px);
+  border: 2px solid #000;
 }
 
+/* Card Icon */
+.dashboard-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Text Styling */
 .dashboard-card h3 {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 8px;
+  color: #000;
 }
 
 .dashboard-card p {
   font-size: 14px;
-  color: #666;
-  flex-grow: 1;
-}
-
-.dashboard-card small {
-  font-size: 12px;
-  color: #999;
-  margin-top: 10px;
-  display: block;
+  color: #000;
+  font-weight: normal;
+  margin: 0;
 }
 
 /* Footer */
 .footer {
   text-align: center;
   font-size: 12px;
-  color: #888;
+  color: #000;
   padding: 15px;
   background: #fff;
   border-top: 1px solid #ddd;
