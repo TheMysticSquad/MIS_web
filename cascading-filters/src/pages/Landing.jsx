@@ -2,6 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/Landing.css";
+import { logout } from "../auth";
 
 // Icon Imports
 import BillingIcon from "../assets/icons/billing.png";
@@ -54,6 +55,11 @@ export default function Landing() {
     },
   ];
 
+  const handleLogout = () => {
+    logout(); // Clear session / token
+    navigate("/"); // Redirect to login page
+  };
+
   return (
     <div className="landing-page">
       {/* ✅ Header */}
@@ -64,6 +70,22 @@ export default function Landing() {
         </div>
         <div className="header-right">
           <span>Welcome</span>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginLeft: "15px",
+              padding: "5px 10px",
+              cursor: "pointer",
+              backgroundColor: "#f44336",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              fontSize: "0.9rem",
+            }}
+            title="Logout"
+          >
+            Logout
+          </button>
         </div>
       </header>
 
