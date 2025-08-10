@@ -17,7 +17,9 @@ export const getEmployeeId = () => sessionStorage.getItem("employee_id");
 export const getRole = () => sessionStorage.getItem("role");
 
 export const logout = () => {
-  sessionStorage.clear();
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("role");
+  if (setUser) setUser(null);
 };
 
 // ---------------------
@@ -62,3 +64,4 @@ export function isUserLoggedIn() {
 export function isAdminLoggedIn() {
   return getRole() === "admin" && !!getToken();
 }
+

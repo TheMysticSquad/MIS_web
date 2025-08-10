@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
   const role = getRole();
 
   if (!token) {
-    return <Navigate to={adminOnly ? "/admin/login" : "/login"} replace />;
+    return <Navigate to={adminOnly ? "/admin/login" : "/"} replace />;
   }
 
   if (adminOnly && role !== "admin") {
