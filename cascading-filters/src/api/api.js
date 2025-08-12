@@ -11,7 +11,9 @@ export const login = async (username, password) => {
 
 // FETCH FILTERS (after dashboard selection)
 export const fetchFilters = async (employeeId) => {
-  const res = await axios.get(`${BASE_URL}/filters/?employee_id=${employeeId}`, {
+  // ✅ removed the trailing slash before query params to avoid 307 redirect
+  const res = await axios.get(`${BASE_URL}/filters`, {
+    params: { employee_id: employeeId },
     headers: { Authorization: `Bearer ${getToken()}` }
   });
   return res.data;
@@ -19,7 +21,8 @@ export const fetchFilters = async (employeeId) => {
 
 // FETCH KPI DATA
 export const fetchKpis = async (sectionId, year, month) => {
-  const res = await axios.get(`${BASE_URL}/test/kpi/`, {
+  // ✅ removed the trailing slash before query params
+  const res = await axios.get(`${BASE_URL}/test/kpi`, {
     params: { section_id: sectionId, year, month },
     headers: { Authorization: `Bearer ${getToken()}` }
   });
