@@ -1,45 +1,36 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/Login.css";
 import bspLogo from "../assets/images/BSPHCL.png";
-import { UserContext } from "../context/UserContext";
+import { useUser } from "../context/UserContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+
+  const { loginUser } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      const res = await fetch("https://mis-test-api.onrender.com/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        // ✅ Store user in context
-        setUser({
-          employee_id: data.employee_id,
-          name: data.name,
-          role: data.role,
-        });
-
-        navigate("/landing");
-      } else {
-        setError(data.detail || "Login failed");
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
+      await loginUser(email.trim(), password);
+      navigate("/landing");
+    } catch (err) {
+      const message =
+        err?.response?.data?.detail || err?.message || "Login failed";
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   };
+
+
 
   return (
     <div className="login-card">
