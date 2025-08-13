@@ -1,11 +1,31 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .metering-dashboard {
   font-family: Arial, sans-serif;
   background: #f5f6fa;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
 .filters-section {
   padding: 20px 30px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.dashboard-content {
+  flex: 1 1 auto;
+  min-height: 600px;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .loading-text,
@@ -16,23 +36,23 @@
   color: #666;
 }
 
-/* KPI Cards Section */
+/* KPI Cards */
 .dashboard-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 cards in one row on desktop */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px;
 }
 
 @media (max-width: 900px) {
   .dashboard-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 cards on medium screens */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .dashboard-container {
-    grid-template-columns: 1fr; /* 1 card on mobile */
+    grid-template-columns: 1fr;
   }
 }
 

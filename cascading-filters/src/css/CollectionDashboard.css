@@ -1,3 +1,13 @@
+/* src/css/CollectionDashboard.css */
+
+:root {
+  --page-padding: 20px;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
 .collection-dashboard {
   font-family: Arial, sans-serif;
   background: #f5f6fa;
@@ -6,17 +16,23 @@
   min-height: 100vh;
 }
 
-/* Keep filters always visible at the top */
+/* Keep header + filters visible and let main content scroll independently */
 .filters-section {
-  padding: 20px 30px;
+  padding: var(--page-padding);
   background: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  z-index: 2;
 }
 
-/* Centered status messages */
+/* main content area: stable container with its own scrolling */
+.collection-content {
+  flex: 1 1 auto;
+  overflow: auto;           /* prevents whole page jumping when charts render */
+  padding: var(--page-padding);
+  box-sizing: border-box;
+}
+
+/* Loading / placeholder */
 .loading-text,
 .error-text,
 .placeholder-text {
@@ -25,19 +41,12 @@
   color: #666;
 }
 
-/* KPI Section to prevent layout shift */
-.kpi-section {
-  flex: 1;
-  min-height: 600px; /* Reserve height for cards/charts */
-  overflow-y: auto;
-}
-
-/* KPI Cards Grid */
+/* KPI Cards grid */
 .dashboard-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 20px;
+  margin-bottom: 24px;
 }
 
 @media (max-width: 900px) {
@@ -66,29 +75,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.dashboard-card h3 {
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.dashboard-card p {
-  font-size: 18px;
-  font-weight: bold;
-  color: #007bff;
-}
-
-/* Charts Section */
+/* charts area */
 .charts-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
-  padding: 20px;
-}
-
-.chart-card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

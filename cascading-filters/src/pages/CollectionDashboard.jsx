@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+// src/pages/CollectionDashboard.jsx
+import React, { useState, useContext, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import Filters from "../components/Filters";
 import CollectionSummaryCards from "../components/CollectionSummaryCards";
@@ -12,6 +13,9 @@ export default function CollectionDashboard() {
   const [kpiData, setKpiData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Top anchor ref - we'll scroll this into view after data loads
+  const topRef = useRef(null);
 
   const handleApplyFilters = (selectedFilters) => {
     if (!selectedFilters.section_id || !selectedFilters.year || !selectedFilters.month) {
@@ -33,6 +37,10 @@ export default function CollectionDashboard() {
       .then((data) => {
         setKpiData(data);
         setLoading(false);
+        // scroll AFTER data has been set (give browser a tick to render)
+        setTimeout(() => {
+          topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
       })
       .catch((err) => {
         setError(err.message || "Something went wrong");
@@ -40,8 +48,21 @@ export default function CollectionDashboard() {
       });
   };
 
+  // Extra safety: if kpiData is set elsewhere, scroll to top as well
+  useEffect(() => {
+    if (kpiData) {
+      const t = setTimeout(() => {
+        topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+      return () => clearTimeout(t);
+    }
+  }, [kpiData]);
+
   return (
     <div className="collection-dashboard">
+      {/* Anchor to scroll to (keeps header visible) */}
+      <div ref={topRef} />
+
       <Header
         title="Collection Dashboard"
         subtitle="Track dues, collections, and efficiency"
@@ -51,21 +72,24 @@ export default function CollectionDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
-      {loading && <p className="loading-text">Loading data...</p>}
-      {error && <p className="error-text">{error}</p>}
+      <main className="collection-content">
+        {loading && <p className="loading-text">Loading data...</p>}
+        {error && <p className="error-text">{error}</p>}
 
-      {kpiData && !loading && !error ? (
-        <>
-          <CollectionSummaryCards kpi={kpiData} />
-          <CollectionCharts kpi={kpiData} />
-        </>
-      ) : (
-        !loading && !error && (
-          <p className="placeholder-text">
-            Please select filters and click Apply to view data
-          </p>
-        )
-      )}
+        {kpiData && !loading && !error ? (
+          <>
+            <CollectionSummaryCards kpi={kpiData} />
+            <CollectionCharts kpi={kpiData} />
+          </>
+        ) : (
+          !loading &&
+          !error && (
+            <p className="placeholder-text">
+              Please select filters and click Apply to view data
+            </p>
+          )
+        )}
+      </main>
     </div>
   );
 }

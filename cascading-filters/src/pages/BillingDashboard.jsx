@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import Filters from "../components/Filters";
 import BillingSummaryCards from "../components/BillingSummaryCards";
@@ -12,6 +12,8 @@ export default function BillingDashboard() {
   const [kpiData, setKpiData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const topRef = useRef(null);
 
   const handleApplyFilters = (selectedFilters) => {
     if (!selectedFilters.section_id || !selectedFilters.year || !selectedFilters.month) {
@@ -33,6 +35,9 @@ export default function BillingDashboard() {
       .then((data) => {
         setKpiData(data);
         setLoading(false);
+        setTimeout(() => {
+          topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 50);
       })
       .catch((err) => {
         setError(err.message || "Something went wrong");
@@ -40,8 +45,19 @@ export default function BillingDashboard() {
       });
   };
 
+  useEffect(() => {
+    if (kpiData) {
+      const t = setTimeout(() => {
+        topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+      return () => clearTimeout(t);
+    }
+  }, [kpiData]);
+
   return (
     <div className="billing-dashboard">
+      <div ref={topRef} />
+
       <Header
         title="Billing Dashboard"
         subtitle="Track bill generation, revisions, and pending bills"
@@ -51,21 +67,24 @@ export default function BillingDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
-      {loading && <p className="loading-text">Loading data...</p>}
-      {error && <p className="error-text">{error}</p>}
+      <main className="billing-content">
+        {loading && <p className="loading-text">Loading data...</p>}
+        {error && <p className="error-text">{error}</p>}
 
-      {kpiData && !loading && !error ? (
-        <>
-          <BillingSummaryCards kpi={kpiData} />
-          <BillingCharts kpi={kpiData} />
-        </>
-      ) : (
-        !loading && !error && (
-          <p className="placeholder-text">
-            Please select filters and click Apply to view data
-          </p>
-        )
-      )}
+        {kpiData && !loading && !error ? (
+          <>
+            <BillingSummaryCards kpi={kpiData} />
+            <BillingCharts kpi={kpiData} />
+          </>
+        ) : (
+          !loading &&
+          !error && (
+            <p className="placeholder-text">
+              Please select filters and click Apply to view data
+            </p>
+          )
+        )}
+      </main>
     </div>
   );
 }
