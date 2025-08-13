@@ -18,6 +18,9 @@ export default function DisconnectionRecoveryDashboard() {
       return;
     }
 
+    // Scroll to top when new data loads
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     setLoading(true);
     setError("");
     setKpiData(null);
@@ -50,21 +53,24 @@ export default function DisconnectionRecoveryDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
-      {loading && <p className="loading-text">Loading data...</p>}
-      {error && <p className="error-text">{error}</p>}
+      {/* Reserve space to avoid jump when loading */}
+      <div className="dashboard-content">
+        {loading && <p className="loading-text">Loading data...</p>}
+        {error && <p className="error-text">{error}</p>}
 
-      {kpiData && !loading && !error ? (
-        <>
-          <DisconnectionRecoverySummaryCards kpi={kpiData} />
-          <DisconnectionRecoveryCharts kpi={kpiData} />
-        </>
-      ) : (
-        !loading && !error && (
-          <p className="placeholder-text">
-            Please select filters and click Apply to view data
-          </p>
-        )
-      )}
+        {kpiData && !loading && !error ? (
+          <>
+            <DisconnectionRecoverySummaryCards kpi={kpiData} />
+            <DisconnectionRecoveryCharts kpi={kpiData} />
+          </>
+        ) : (
+          !loading && !error && (
+            <p className="placeholder-text">
+              Please select filters and click Apply to view data
+            </p>
+          )
+        )}
+      </div>
     </div>
   );
 }

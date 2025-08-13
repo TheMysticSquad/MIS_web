@@ -18,6 +18,10 @@ export default function ServiceConnectionDashboard() {
       setError("Please select all filters");
       return;
     }
+
+    // Scroll to top when new data is requested
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     setLoading(true);
     setError("");
     setKpiData(null);
@@ -52,8 +56,8 @@ export default function ServiceConnectionDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
-      {/* Scrollable Dashboard */}
-      <div className="dashboard-scroll">
+      {/* Main Content */}
+      <div className="dashboard-content">
         {loading && <p className="loading-text">Loading data...</p>}
         {error && <p className="error-text">{error}</p>}
 
@@ -155,7 +159,9 @@ export default function ServiceConnectionDashboard() {
             </div>
           </>
         ) : (
-          !loading && !error && <p className="placeholder-text">Please select filters and click Apply to view data</p>
+          !loading && !error && (
+            <p className="placeholder-text">Please select filters and click Apply to view data</p>
+          )
         )}
       </div>
     </div>
