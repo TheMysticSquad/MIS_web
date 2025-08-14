@@ -1,19 +1,19 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+// BillingDashboard.jsx
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import Filters from "../components/Filters";
 import BillingSummaryCards from "../components/BillingSummaryCards";
 import BillingCharts from "../components/BillingCharts";
 import { UserContext } from "../context/UserContext";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns";
 import "../css/BillingDashboard.css";
 
 export default function BillingDashboard() {
   const { user } = useContext(UserContext);
-
   const [kpiData, setKpiData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const topRef = useRef(null);
 
   const handleApplyFilters = (selectedFilters) => {
     if (!selectedFilters.section_id || !selectedFilters.year || !selectedFilters.month) {
@@ -35,9 +35,6 @@ export default function BillingDashboard() {
       .then((data) => {
         setKpiData(data);
         setLoading(false);
-        setTimeout(() => {
-          topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 50);
       })
       .catch((err) => {
         setError(err.message || "Something went wrong");
@@ -45,19 +42,8 @@ export default function BillingDashboard() {
       });
   };
 
-  useEffect(() => {
-    if (kpiData) {
-      const t = setTimeout(() => {
-        topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 50);
-      return () => clearTimeout(t);
-    }
-  }, [kpiData]);
-
   return (
     <div className="billing-dashboard">
-      <div ref={topRef} />
-
       <Header
         title="Billing Dashboard"
         subtitle="Track bill generation, revisions, and pending bills"
@@ -67,24 +53,37 @@ export default function BillingDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
-      <main className="billing-content">
-        {loading && <p className="loading-text">Loading data...</p>}
-        {error && <p className="error-text">{error}</p>}
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Billing KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.billing}
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
 
-        {kpiData && !loading && !error ? (
-          <>
+      {loading && <p className="loading-text">Loading data...</p>}
+      {error && <p className="error-text">{error}</p>}
+
+      {kpiData && !loading && !error ? (
+        <>
+          <div id="summaryCards">
             <BillingSummaryCards kpi={kpiData} />
+          </div>
+          <div id="chartsSection">
             <BillingCharts kpi={kpiData} />
-          </>
-        ) : (
-          !loading &&
-          !error && (
-            <p className="placeholder-text">
-              Please select filters and click Apply to view data
-            </p>
-          )
-        )}
-      </main>
+          </div>
+        </>
+      ) : (
+        !loading && !error && (
+          <p className="placeholder-text">
+            Please select filters and click Apply to view data
+          </p>
+        )
+      )}
     </div>
   );
 }
