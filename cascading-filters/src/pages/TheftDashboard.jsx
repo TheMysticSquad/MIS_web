@@ -5,6 +5,8 @@ import { UserContext } from "../context/UserContext";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from "recharts";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns"; 
 import "../css/TheftDashboard.css";
 
 export default function TheftDashboard() {
@@ -47,6 +49,18 @@ export default function TheftDashboard() {
       <div className="filters-section">
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Collection KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.collection} 
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
+
 
       {loading && <p className="loading-text">Loading data...</p>}
       {error && <p className="error-text">{error}</p>}

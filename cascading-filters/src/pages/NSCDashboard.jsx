@@ -5,6 +5,8 @@ import { UserContext } from "../context/UserContext";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from "recharts";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns"; 
 import "../css/ServiceConnectionDashboard.css";
 
 export default function ServiceConnectionDashboard() {
@@ -55,6 +57,18 @@ export default function ServiceConnectionDashboard() {
       <div className="filters-fixed">
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Collection KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.collection} 
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
+
 
       {/* Main Content */}
       <div className="dashboard-content">

@@ -4,6 +4,8 @@ import Filters from "../components/Filters";
 import MeteringSummaryCards from "../components/MeteringSummaryCards";
 import MeteringCharts from "../components/MeteringCharts";
 import { UserContext } from "../context/UserContext";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns"; 
 import "../css/MeteringDashboard.css";
 
 export default function MeteringDashboard() {
@@ -50,6 +52,18 @@ export default function MeteringDashboard() {
       <div className="filters-section">
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Collection KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.collection} 
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
+
 
       {loading && <p className="loading-text">Loading data...</p>}
       {error && <p className="error-text">{error}</p>}
