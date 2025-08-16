@@ -18,18 +18,18 @@ html, body, #root {
 
 /* Filters section: sticky + visible with shadow */
 .filters-section {
-  padding: 20px 30px;                
+  padding: 20px 30px;
   background: #fff;
-  position: sticky;                  
-  top: 0;                            
-  z-index: 10;                       
+  position: sticky;
+  top: 0;
+  z-index: 10;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* Collection content: scrollable container */
 .collection-content {
   flex: 1 1 auto;
-  overflow: auto;           /* prevents whole page jump when charts render */
+  overflow: auto; /* prevents whole page jump when charts render */
   padding: var(--page-padding);
   box-sizing: border-box;
 }
