@@ -1,14 +1,16 @@
+// BillingDashboard.jsx
 import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import Filters from "../components/Filters";
 import BillingSummaryCards from "../components/BillingSummaryCards";
 import BillingCharts from "../components/BillingCharts";
 import { UserContext } from "../context/UserContext";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns";
 import "../css/BillingDashboard.css";
 
 export default function BillingDashboard() {
   const { user } = useContext(UserContext);
-
   const [kpiData, setKpiData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,13 +53,29 @@ export default function BillingDashboard() {
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
 
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Billing KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.billing}
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
+
       {loading && <p className="loading-text">Loading data...</p>}
       {error && <p className="error-text">{error}</p>}
 
       {kpiData && !loading && !error ? (
         <>
-          <BillingSummaryCards kpi={kpiData} />
-          <BillingCharts kpi={kpiData} />
+          <div id="summaryCards">
+            <BillingSummaryCards kpi={kpiData} />
+          </div>
+          <div id="chartsSection">
+            <BillingCharts kpi={kpiData} />
+          </div>
         </>
       ) : (
         !loading && !error && (
