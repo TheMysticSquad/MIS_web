@@ -4,6 +4,8 @@ import Filters from "../components/Filters";
 import DisconnectionRecoverySummaryCards from "../components/DisconnectionRecoverySummaryCards";
 import DisconnectionRecoveryCharts from "../components/DisconnectionRecoveryCharts";
 import { UserContext } from "../context/UserContext";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns"; 
 import "../css/DisconnectionRecoveryDashboard.css";
 
 export default function DisconnectionRecoveryDashboard() {
@@ -17,6 +19,9 @@ export default function DisconnectionRecoveryDashboard() {
       setError("Please select all filters");
       return;
     }
+
+    // Scroll to top when new data loads
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     setLoading(true);
     setError("");
@@ -49,22 +54,37 @@ export default function DisconnectionRecoveryDashboard() {
       <div className="filters-section">
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
-
-      {loading && <p className="loading-text">Loading data...</p>}
-      {error && <p className="error-text">{error}</p>}
-
-      {kpiData && !loading && !error ? (
-        <>
-          <DisconnectionRecoverySummaryCards kpi={kpiData} />
-          <DisconnectionRecoveryCharts kpi={kpiData} />
-        </>
-      ) : (
-        !loading && !error && (
-          <p className="placeholder-text">
-            Please select filters and click Apply to view data
-          </p>
-        )
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Collection KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.collection} 
+            chartsId="chartsSection"
+          />
+        </div>
       )}
+
+
+      {/* Reserve space to avoid jump when loading */}
+      <div className="dashboard-content">
+        {loading && <p className="loading-text">Loading data...</p>}
+        {error && <p className="error-text">{error}</p>}
+
+        {kpiData && !loading && !error ? (
+          <>
+            <DisconnectionRecoverySummaryCards kpi={kpiData} />
+            <DisconnectionRecoveryCharts kpi={kpiData} />
+          </>
+        ) : (
+          !loading && !error && (
+            <p className="placeholder-text">
+              Please select filters and click Apply to view data
+            </p>
+          )
+        )}
+      </div>
     </div>
   );
 }

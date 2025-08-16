@@ -5,6 +5,8 @@ import { UserContext } from "../context/UserContext";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from "recharts";
+import ExportPDF from "../components/ExportPDF";
+import pdfColumns from "../config/pdfColumns"; 
 import "../css/ServiceConnectionDashboard.css";
 
 export default function ServiceConnectionDashboard() {
@@ -18,6 +20,10 @@ export default function ServiceConnectionDashboard() {
       setError("Please select all filters");
       return;
     }
+
+    // Scroll to top when new data is requested
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     setLoading(true);
     setError("");
     setKpiData(null);
@@ -51,9 +57,21 @@ export default function ServiceConnectionDashboard() {
       <div className="filters-fixed">
         <Filters employeeId={user?.employee_id} onApply={handleApplyFilters} />
       </div>
+      {/* Export PDF Button */}
+      {kpiData && !loading && !error && (
+        <div style={{ textAlign: "right", padding: "10px 30px" }}>
+          <ExportPDF
+            title="Collection KPI Report"
+            kpiData={kpiData}
+            columns={pdfColumns.collection} 
+            chartsId="chartsSection"
+          />
+        </div>
+      )}
 
-      {/* Scrollable Dashboard */}
-      <div className="dashboard-scroll">
+
+      {/* Main Content */}
+      <div className="dashboard-content">
         {loading && <p className="loading-text">Loading data...</p>}
         {error && <p className="error-text">{error}</p>}
 
@@ -155,7 +173,9 @@ export default function ServiceConnectionDashboard() {
             </div>
           </>
         ) : (
-          !loading && !error && <p className="placeholder-text">Please select filters and click Apply to view data</p>
+          !loading && !error && (
+            <p className="placeholder-text">Please select filters and click Apply to view data</p>
+          )
         )}
       </div>
     </div>

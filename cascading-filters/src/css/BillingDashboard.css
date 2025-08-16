@@ -1,11 +1,24 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .billing-dashboard {
   font-family: Arial, sans-serif;
   background: #f5f6fa;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
 .filters-section {
   padding: 20px 30px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  z-index: 2;
+  position: sticky;
+  top: 0;
 }
 
 .loading-text,
@@ -14,6 +27,14 @@
   text-align: center;
   margin: 20px 0;
   color: #666;
+}
+
+/* Content area to prevent jump */
+.billing-content {
+  flex: 1 1 auto;
+  min-height: 600px; /* prevents jump when data loads */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* KPI Cards */
